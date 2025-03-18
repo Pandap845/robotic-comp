@@ -72,6 +72,40 @@ prox_dist = 25
 trayectoria = []
 pvc_color = "None"
 
+nodes = [
+    [1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1]
+]
+
+#Puertas
+"""
+doors = {
+    "A": (1,1), "F": (1,3), "D": (2,2), "I": (2,4),
+    "B": (3,1), "G": (3,3), "E": (4,2), "J": (4,4),
+    "C": (5,1), "H":( 5,3), "K": (5,5)
+}
+
+
+# Definición de las puertas (puntos de destino)
+museum = ["E", "H"]
+library = ["J", "K"]
+city_hall = ["J", "I"]
+drug_store = ["B", "G"]
+bakery = ["A", "D"]
+school = ["I", "F"]
+park = ["A", "B", "C"]
+"""
+
+# Variables de posición y ruta
+robot_position = None  # Se identificará después
+robot_path = []  # Almacena los movimientos hecho
+
+
 # -----------------------------------------
 # Enumeraciones y Clases
 # -----------------------------------------
@@ -90,21 +124,8 @@ class Direction(Enum):
     EAST = "East"
     SOUTH = "South"
     WEST = "West"
+    UNKOW = "Unknow"
 
-class Node:
-    def __init__(self, name):
-        self.name = name
-        self.left = None
-        self.right = None
-        self.up = None
-        self.down = None
-    
-    def set_directions(self, left, right, up, down):
-        self.left = left
-        self.right = right
-        self.up = up
-        self.down = down
-# Funciones auxiliares
 
 # -----------------------------------------
 # -----------------------------------------
@@ -135,7 +156,7 @@ def detect_color(sensor):
 
 def verify_obstacle()->bool: #Verifica si el objeto está a una distancia menor en el sensor.
     return infra_sensor.distance() < DETECT_DISTANT;
-    
+
 
 # -----------------------------------------
 # Funciones de movimiento
@@ -225,99 +246,14 @@ def align_robot_start():
     
 
 
-# -----------------------------------------
-# Funciones para llegar a la parte Azul en N posición
-# -----------------------------------------
 
-def arrive_first_time():
-    
-    #En primer caso, una vez el robot se ha alineado, basta con verificar que color se encuentr adelante
-
-    
-    pass 
 
 
 #Funciones auxiliares
-
-def move_if_find_red_first(): #Si se encuentra con una pared roja, los movimientos a realizar
-     
-    right_turn(); #Moverse 180 grados
-    right_turn();
-    move_one_block(); #Se mueve hacia adelante
-    
-    # Girar a la izquierda, y verificar que no hay nada que obstrulla.
-    if (verify_obstacle()): #Si la distancia es menor a 25
-        #Tratar de seguir adelante 
-        move_one_block();
-        move_one_block();
-    
-    #Moverse a la izquierda
-    left_turn(); #Gira a la izquierda
-    
-    while(detect_color(c_sensor1) == Colors.WHITE and
-          detect_color(c_sensor2) == Colors.WHITE and 
-          detect_color(c_sensor3) == Colors.WHITE
-          ): #Moverse hasta que encuentre la parte azul.
-        
-        move_one_block();
-    
-    
-    if(detect_color(c_sensor1) == Colors.BLACK and
-    detect_color(c_sensor2) == Colors.BLACK):
-        move_red_to_black();
-          
-
-def move_if_find_black_first(): #Si lo primero que encontró es negro, entonces
-    
-    right_turn(); #GIra primero a la derecha
-    
-    move_distance(distance_mm=100); #Se mueve ligeramente para verificar
-    
-    #SI es blanco, entonces facilmente llega avanzando una casilla, recto y mientras sea blanco
-    if(detect_color(c_sensor1) == Colors.WHITE and
-       detect_color(c_sensor3) == Colors.WHITE):
-        
-        move_one_block();
-        left_turn();
-        
-        while(detect_color(c_sensor1) == Colors.WHITE and
-          detect_color(c_sensor2) == Colors.WHITE and 
-          detect_color(c_sensor3) == Colors.WHITE
-          ): #Moverse hasta que encuentre la parte azul.
-        
-            move_one_block();
-    
-        
-    
-    elif(detect_color(c_sensor1) == Colors.RED and
-         detect_color(c_sensor3) == Colors.RED):
-        move_if_find_red_first();
-    
-    pass;
-    
-
-
-def move_red_to_black(): #Significa que al girar a la izquierda encontró negro. ENtonces, basta con que gire 180% y recto
-    
-    right_turn();
-    right_turn();
-    
-    while(detect_color(c_sensor1) == Colors.WHITE and
-        detect_color(c_sensor2) == Colors.WHITE and
-        detect_color(c_sensor3) == Colors.WHITE):        
-        move_one_block();
-    #Entonces llego a la parte azul.
 # -----------------------------------------
 # Main Loop
 # -----------------------------------------
 while True: #Serie de pasos a ejecutar
-    
-    
-    align_robot_start(); #Primero, alinearse con el mapa
-    arrive_first_time(); #Llegar por primera vez a la parte azul
-    #Luego: Función para determinar su posición inicial y determinar el mapa
-    #Función para colocarse en una esquina IZQ o DER
-    
-    #Generar BUCLE QUE; CONOCIENDO POSICIONES GENERA LAS RUTAS DE BUSQUEDA Y COLECTA.
-    
+
+
     pass
